@@ -1,10 +1,11 @@
 {
   "scripts": {
     "start": "node index.js",
-  "start:dev": "nodemon index.js"
+    "start:dev": "nodemon index.js"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.0"
   },
   "name": "cli-application",
   "version": "1.0.0",
@@ -17,6 +18,7 @@
     "brace-expansion": "^1.1.11",
     "braces": "^3.0.2",
     "chokidar": "^3.5.3",
+    "commander": "^11.0.0",
     "concat-map": "^0.0.1",
     "debug": "^3.2.7",
     "fill-range": "^7.0.1",
@@ -41,7 +43,9 @@
     "to-regex-range": "^5.0.1",
     "touch": "^3.1.0",
     "undefsafe": "^2.0.5",
-    "yallist": "^4.0.0"
+    "uuid": "^9.0.0",
+    "yallist": "^4.0.0",
+    "yargs": "^17.7.2"
   },
   "repository": {
     "type": "git",

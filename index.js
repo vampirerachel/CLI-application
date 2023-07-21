@@ -1,49 +1,53 @@
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-} = require('./contacts.js');
+const { Command } = require('commander');
+const { listContacts, getContactById, removeContact, addContact } = require('./contacts');
 
-// Test listContacts function
-listContacts()
-  .then((contacts) => {
-    console.log('All contacts:', contacts);
-  })
-  .catch((err) => {
-    console.error('Error in listContacts:', err);
-  });
+const program = new Command();
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone');
 
-// Test getContactById function
-const contactIdToFind = "qdggE76Jtbfd9eWJHrssH"; // Replace with a valid contact ID from your data
-getContactById(contactIdToFind)
-  .then((contact) => {
-    console.log('Contact found by ID:', contact);
-  })
-  .catch((err) => {
-    console.error('Error in getContactById:', err);
-  });
+program.parse(process.argv);
 
-// Test removeContact function
-const contactIdToRemove = "qdggE76Jtbfd9eWJHrssH"; // Replace with a valid contact ID to remove from your data
-removeContact(contactIdToRemove)
-  .then((result) => {
-    console.log('Contact removed successfully:', result);
-  })
-  .catch((err) => {
-    console.error('Error in removeContact:', err);
-  });
+const argv = program.opts();
 
-// Test addContact function
-const newContact = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '123-456-7890',
-};
-addContact(newContact.name, newContact.email, newContact.phone)
-  .then((addedContact) => {
-    console.log('New contact added:', addedContact);
-  })
-  .catch((err) => {
-    console.error('Error in addContact:', err);
-  });
+async function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case 'list':
+      const contacts = await listContacts();
+      console.table(contacts);
+      break;
+
+    case 'get':
+      const contactById = await getContactById(id);
+      if (contactById) {
+        console.table(contactById);
+      } else {
+        console.log('No User with that ID \n');
+      }
+      break;
+
+    case 'add':
+      const addedContact = await addContact(name, email, phone);
+      if (addedContact) {
+        console.log('New contact added:', addedContact);
+      }
+      break;
+
+    case 'remove':
+      const removed = await removeContact(id);
+      if (removed) {
+        console.log('Contact removed successfully');
+      } else {
+        console.log('Contact not found');
+      }
+      break;
+
+    default:
+      console.warn('\x1B[31m Unknown action type!');
+  }
+}
+
+invokeAction(argv);
